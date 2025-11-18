@@ -209,6 +209,8 @@ Si tienes dudas sobre los requisitos, no dudes en contactarnos.
 ## Configuración
 ```bash
 # Variables de entorno
+cd backend
+cp .env.example .env
 ```
 
 ## Ejecución

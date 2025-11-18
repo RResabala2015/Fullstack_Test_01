@@ -1,5 +1,5 @@
 # Decisiones Técnicas
-## [Tu Nombre]
+## [Renato Simon Resabala Vera]
 
 > **Nota**: Este es un archivo opcional pero recomendado. Documentar tus decisiones técnicas demuestra pensamiento crítico y puede sumar puntos extra en la evaluación.
 
@@ -7,8 +7,8 @@
 
 ## 📋 Información General
 
-- **Nombre del Candidato**: [Tu nombre completo]
-- **Fecha de Inicio**: [DD/MM/YYYY]
+- **Nombre del Candidato**: [Renato Simon Resabala Vera]
+- **Fecha de Inicio**: [17/11/2025]
 - **Fecha de Entrega**: [DD/MM/YYYY]
 - **Tiempo Dedicado**: [Ej: ~20 horas]
 
@@ -20,11 +20,11 @@
 
 | Tecnología | Versión | Razón de Elección |
 |------------|---------|-------------------|
-| Node.js | 18.x | [Explica por qué elegiste esta versión] |
-| Express | 4.x | [Razón] |
-| Base de Datos | MySQL/MongoDB | [¿Por qué elegiste esta sobre la otra?] |
-| ORM/ODM | Sequelize/Mongoose | [Razón] |
-| Validación | express-validator/Joi/Zod | [Razón] |
+| Node.js | V20.19.5 | [Es la version LTS(long term support), recibira actualizaciones hasta abril 2026, tiene errores corregidos, es la version a fecha de hoy recomendada para proyectos empresariales de larga vida] |
+| Express | 4.21.2 | [Mejor compatibilidad con node 18 o mayor, zod y sus validaciones] |
+| Base de Datos | MySQL 8  | [Relaciones fuertes entre entidades, por medio de foreign keys, joins y filtros complejos, integridad de datos, menor ezfuerso de diseño] |
+| ORM | Sequelize | [Puesto que elejimos mysql y sequelize es un orm maduro, es flexible para consultas de tipo raw, soporta querys avanzados, cuaja bien con este proyecto y sus analiticas, Modelos, Migraciones, Relaciones, Validaciones] |
+| Validación | Zod | [Validaciones robustas, Tipado fuerte, Reutilización de esquemas, Código limpio, Nativo de typescript] |
 | Testing | Jest/Mocha | [Razón] |
 
 ### Frontend
