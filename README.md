@@ -204,6 +204,10 @@ Si tienes dudas sobre los requisitos, no dudes en contactarnos.
 ## Instalación
 ```bash
 # Tus comandos
+cd backend
+npm install
+cd frontend
+npm install
 ```
 
 ## Configuración
@@ -211,12 +215,16 @@ Si tienes dudas sobre los requisitos, no dudes en contactarnos.
 # Variables de entorno
 cd backend
 cp .env.example .env
+cd frontend
+cp .env.example .env
 ```
 
 ## Ejecución
 ```bash
 # Backend
+npm run dev
 # Frontend
+npm run dev
 ```
 
 ## Tests
