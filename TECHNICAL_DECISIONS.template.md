@@ -29,13 +29,14 @@
 
 ### Frontend
 
-| Tecnología | Versión | Razón de Elección |
-|------------|---------|-------------------|
-| React | 18.x | [Razón] |
-| Build Tool | Vite/CRA | [¿Por qué elegiste este?] |
-| Estado Global | Context/Redux/Zustand | [Razón] |
-| Estilos | CSS/Tailwind/MUI/etc | [Razón] |
-| Formularios | react-hook-form/Formik | [Razón] |
+| Tecnología        | Versión                            | Razón de Elección                                                                                                              |
+| ----------------- | ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| **React**         | 18.x + TS                          | Es la versión estable, compatible con Node 20, soporta Server Components, concurrent rendering y excelente ecosistema. |
+| **Build Tool**    | **Vite**                           | Es más rápido que CRA, compatible con TS + SWC, permite HMR instantáneo y requiere menos configuración. |
+| **Estado Global** | **Redux Toolkit + Redux DevTools** | Estandariza el manejo de estado, reduce boilerplate, soporta persistencia y debugging avanzado. |
+| **Estilos**       | **Material UI (v7.x)**             | Componenteado limpio, accesible, productivo, ideal para dashboards, CRUDs. |
+| **Formularios**   | **react-hook-form**                | Mejor performance vs Formik, integración directa con MUI, validación flexible con Zod/Yup. |
+
 
 ---
 

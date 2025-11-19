@@ -1,5 +1,6 @@
 import express, { type Express }  from "express";
 import cors from "cors";
+import dotenv from "dotenv";
 
 import authRoutes from "./routes/auth.routes";
 import userRoutes from "./routes/user.routes";
@@ -8,9 +9,13 @@ import taskRoutes from "./routes/task.routes";
 
 import { swaggerDocs } from "./config/swagger";
 
+dotenv.config();
+
 const app : Express = express();
 
-app.use(cors());
+const CORS_ORIGIN = process.env.CORS_ORIGIN || "*";
+
+app.use(cors({ origin: CORS_ORIGIN }));
 app.use(express.json());
 
 // Rutas
