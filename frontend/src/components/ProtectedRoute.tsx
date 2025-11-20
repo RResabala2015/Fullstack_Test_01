@@ -16,4 +16,11 @@ export default function ProtectedRoute({ children }: ProtectedRouteProps) {
   }
 
   return children;
+  //Solo para prueba sin logeo:
+  /*if (!isAuthenticated) {
+    return children;  
+  }
+  
+  return <Navigate to="/login" replace />;
+  */
 }

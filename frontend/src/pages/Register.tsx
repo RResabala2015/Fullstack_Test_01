@@ -1,12 +1,8 @@
+// Lib Externas:
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { registerSchema } from "../validation/register.schema";
-import type { RegisterFormData } from "../validation/register.schema";
-import { registerRequest } from "../api/authService";
 import { useDispatch } from "react-redux";
-import { loginSuccess } from "../store/slices/userSlice";
 import { useNavigate, Link as RouterLink } from "react-router-dom";
-
 import {
   Box,
   Button,
@@ -16,6 +12,11 @@ import {
   Typography,
   Link,
 } from "@mui/material";
+// Lib Internas:
+import { registerSchema } from "../validation/register.schema";
+import type { RegisterFormData } from "../validation/register.schema";
+import { registerRequest } from "../api/authService";
+import { loginSuccess } from "../store/slices/userSlice";
 
 export default function Register() {
   const dispatch = useDispatch();
@@ -33,7 +34,7 @@ export default function Register() {
     try {
       const res = await registerRequest(data);
       dispatch(loginSuccess({ token: res.token }));
-      navigate("/dashboard");
+      navigate("/projects");
     } catch (error) {
       console.error(error);
       alert("No se pudo registrar el usuario");
