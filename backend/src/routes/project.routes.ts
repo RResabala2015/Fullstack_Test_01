@@ -7,6 +7,7 @@ import {
   updateProject,
   deleteProject,
   addCollaborator,
+  getCollaborators,
 } from "../controllers/project.controller";
 
 import validate from "../middlewares/validate";
@@ -105,7 +106,7 @@ const router = Router();
 
 /**
  * @swagger
- * /api/projects:
+ * /projects:
  *   post:
  *     summary: Crear un proyecto
  *     tags: [Projects]
@@ -134,7 +135,7 @@ router.post("/", auth, validate(createProjectSchema), createProject);
 
 /**
  * @swagger
- * /api/projects:
+ * /projects:
  *   get:
  *     summary: Listar proyectos con paginación
  *     tags: [Projects]
@@ -175,7 +176,7 @@ router.get("/", auth, getProjects);
 
 /**
  * @swagger
- * /api/projects/{id}:
+ * /projects/{id}:
  *   get:
  *     summary: Obtener un proyecto por ID
  *     tags: [Projects]
@@ -199,7 +200,7 @@ router.get("/:id", auth, getProjectById);
 
 /**
  * @swagger
- * /api/projects/{id}:
+ * /projects/{id}:
  *   put:
  *     summary: Actualizar un proyecto (solo owner)
  *     tags: [Projects]
@@ -229,7 +230,7 @@ router.put("/:id", auth, validate(updateProjectSchema), updateProject);
 
 /**
  * @swagger
- * /api/projects/{id}:
+ * /projects/{id}:
  *   delete:
  *     summary: Eliminar un proyecto (solo owner)
  *     tags: [Projects]
@@ -253,7 +254,7 @@ router.delete("/:id", auth, deleteProject);
 
 /**
  * @swagger
- * /api/projects/add-collaborator:
+ * /projects/add-collaborator:
  *   post:
  *     summary: Añadir un colaborador al proyecto (solo owner)
  *     tags: [Projects]
@@ -274,5 +275,57 @@ router.delete("/:id", auth, deleteProject);
  *         description: Proyecto o usuario no existe
  */
 router.post("/add-collaborator", auth, addCollaborator);
+
+/**
+ * @swagger
+ * /projects/{projectId}/collaborators:
+ *   get:
+ *     summary: Obtener colaboradores asignados a un proyecto
+ *     description: Retorna la lista de usuarios asignados como colaboradores u owners de un proyecto específico.
+ *     tags:
+ *       - Projects
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: projectId
+ *         required: true
+ *         description: ID del proyecto
+ *         schema:
+ *           type: integer
+ *           example: 1
+ *     responses:
+ *       200:
+ *         description: Lista de colaboradores del proyecto
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: integer
+ *                     example: 3
+ *                   name:
+ *                     type: string
+ *                     example: "Carlos Torres"
+ *                   email:
+ *                     type: string
+ *                     example: "carlos@example.com"
+ *                   role:
+ *                     type: string
+ *                     enum: [owner, collaborator]
+ *                     example: "collaborator"
+ *       400:
+ *         description: Parámetro inválido (projectId incorrecto)
+ *       401:
+ *         description: No autorizado, falta token o token inválido
+ *       404:
+ *         description: Proyecto no encontrado o sin colaboradores
+ *       500:
+ *         description: Error interno del servidor
+ */
+router.get("/:projectId/collaborators", auth, getCollaborators);
 
 export default router;

@@ -158,3 +158,34 @@ export const addCollaborator = async (req: AuthRequest, res: Response) => {
     res.status(500).json({ message: "Error al agregar colaborador", error });
   }
 };
+
+export const getCollaborators = async (req: AuthRequest, res: Response) => {
+  try {
+    const { projectId } = req.params;
+
+    const links = await ProjectUser.findAll({
+      where: { projectId },
+      attributes: ["userId"],
+    });
+
+    const userIds = links.map(l => l.userId);
+
+    if (userIds.length === 0) {
+      return res.status(404).json({ collaborators: [] });
+    }
+
+    const collaborators = await User.findAll({
+      where: { id: userIds },
+      attributes: ["id", "name", "email"],
+    });
+
+    return res.status(200).json({ collaborators });
+
+  } catch (error) {
+    console.error("Error obteniendo colaboradores:", error);
+    return res.status(500).json({
+      message: "Error obteniendo colaboradores",
+      error,
+    });
+  }
+};

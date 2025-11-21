@@ -11,8 +11,8 @@ const axiosInstance = axios.create({
 axiosInstance.interceptors.request.use((config) => {
   try {
     const persistRoot = JSON.parse(localStorage.getItem('persist:root') || '{}');
-    const auth = persistRoot.auth ? JSON.parse(persistRoot.auth) : null;
-    const token = auth?.userLoginInfo?.token;
+    const user = persistRoot.user ? JSON.parse(persistRoot.user) : null;
+    const token = user?.token;
 
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;

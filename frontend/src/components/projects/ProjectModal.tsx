@@ -8,6 +8,7 @@ import {
   Box,
 } from "@mui/material";
 import { useForm } from "react-hook-form";
+import { useEffect } from "react";
 
 interface ProjectModalProps {
   open: boolean;
@@ -28,22 +29,30 @@ export default function ProjectModal({
   project,
 }: ProjectModalProps) {
   const { register, handleSubmit, reset } = useForm<ProjectForm>({
-    defaultValues: project || {
+    defaultValues: {
       name: "",
       description: "",
     },
   });
 
-  if (project) {
-    reset(project);
-  }
+  useEffect(() => {
+    if (open) {
+      if (project) {
+        reset({
+          name: project.name,
+          description: project.description || "",
+        });
+      } else {
+        reset({
+          name: "",
+          description: "",
+        });
+      }
+    }
+  }, [open, project, reset]);
 
   const submit = (data: ProjectForm) => {
     onSave(data);
-    reset({
-      name: "",
-      description: "",
-    });
   };
 
   return (
