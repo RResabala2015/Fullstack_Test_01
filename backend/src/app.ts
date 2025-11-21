@@ -16,9 +16,11 @@ dotenv.config({
 
 const app : Express = express();
 
-const CORS_ORIGIN = process.env.CORS_ORIGIN || "*";
+const allowedOrigins = (process.env.CORS_ORIGIN || "").split(",").filter(Boolean);
 
-app.use(cors({ origin: CORS_ORIGIN }));
+app.use(cors({
+  origin: allowedOrigins.length ? allowedOrigins : undefined
+}));
 app.use(express.json());
 
 // Rutas

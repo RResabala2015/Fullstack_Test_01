@@ -6,7 +6,7 @@ import {
   updateTask,
   deleteTask,
 } from "../controllers/task.controller";
-
+import { auth } from "../middlewares/auth.middleware";
 import validate from "../middlewares/validate";
 import { createTaskSchema, updateTaskSchema } from "../validations/task.schema";
 
@@ -95,8 +95,8 @@ const router = Router();
  *               items:
  *                 $ref: '#/components/schemas/Task'
  */
-router.post("/", validate(createTaskSchema), createTask);
-router.get("/", getTasks);
+router.post("/", auth, validate(createTaskSchema), createTask);
+router.get("/", auth, getTasks);
 /**
  * @swagger
  * /tasks/{id}:
@@ -155,7 +155,7 @@ router.get("/", getTasks);
  *       404:
  *         description: Tarea no encontrada
  */
-router.get("/:id", getTaskById);
+router.get("/:id", auth, getTaskById);
 /**
  * @swagger
  * /tasks/{id}:
@@ -203,7 +203,7 @@ router.get("/:id", getTaskById);
  *       404:
  *         description: Tarea no encontrada
  */
-router.put("/:id", validate(updateTaskSchema), updateTask);
-router.delete("/:id", deleteTask);
+router.put("/:id", auth, validate(updateTaskSchema), updateTask);
+router.delete("/:id", auth, deleteTask);
 
 export default router;

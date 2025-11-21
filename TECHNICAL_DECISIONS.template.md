@@ -10,7 +10,7 @@
 - **Nombre del Candidato**: [Renato Simon Resabala Vera]
 - **Fecha de Inicio**: [17/11/2025]
 - **Fecha de Entrega**: [DD/MM/YYYY]
-- **Tiempo Dedicado**: [Ej: ~20 horas]
+- **Tiempo Dedicado**: [35 horas]
 
 ---
 
@@ -46,36 +46,55 @@
 
 ```
 backend/
-├── src/
-│   ├── [tu estructura]
-│   └── ...
+├───etc
+│   └───mysqlbdseeds
+├───src
+│   ├───config
+│   ├───controllers
+│   ├───middlewares
+│   ├───models
+│   ├───routes
+│   └───validations
+└───tests
 ```
 
 **Razón de esta estructura:**
-[Explica por qué organizaste tu código de esta manera]
+[Estructura intuitiva para facil navegacion, con el patron MVC adaptado (Request → Routes → Middlewares → Controllers → Models → Response ↓ Validations). Separacion de responsabilidades de clases por capas. Facil de escalar y testear. Convencion estandar de Express/Node]
 
 ### Estructura del Frontend
 
 ```
 frontend/
-├── src/
-│   ├── [tu estructura]
-│   └── ...
+├───public
+└───src
+    ├───@types
+    ├───api
+    ├───assets
+    ├───components
+    │   ├───projects
+    │   └───tasks
+    ├───layout
+    ├───pages
+    ├───router
+    ├───store
+    │   └───slices
+    └───validation
 ```
 
 **Razón de esta estructura:**
-[Explica por qué organizaste tu código de esta manera]
+[Para separar la responsabilidades de las clases, escalar horizontalmente los componentes, este proyecto es pequeño/mediano siguiendo YAGNI, no quiero usar una estructura compleja que no necesito en este momento]
 
 ---
 
 ## 🗄️ Diseño de Base de Datos
 
-### Elección: MySQL / MongoDB
+### Elección: MySQL
 
 **Razones:**
-- [Razón 1]
-- [Razón 2]
-- [Razón 3]
+- Objetos relacionales, asignaciones.
+- Consistencia de datos estructurados.
+- En Mongo, tendria que a pesar de ser mas flexibles sus colecciones,
+  fallos en consistencia de relaciones, consultas complejas para realizar joins.
 
 ### Schema/Modelos
 
@@ -92,10 +111,10 @@ frontend/
 
 ### Implementaciones de Seguridad
 
-- [ ] **Hash de contraseñas**: [bcrypt, argon2, etc. - ¿Por qué elegiste este?]
-- [ ] **JWT**: [¿Cómo configuraste la expiración? ¿Por qué?]
-- [ ] **Validación de inputs**: [¿Qué estrategia usaste?]
-- [ ] **CORS**: [¿Cómo lo configuraste?]
+- [x] **Hash de contraseñas**: [bcrypt - mas maduro y facilidad de implementacion en backend]
+- [x] **JWT**: [En el back end ya tiene expiracion, si no tiene un hash valido, no puede realizar nigun tipo de interaccion, protegiendo todas las rutas despues de logearse]
+- [x] **Validación de inputs**: [Definir el esquema de validación con Zod, especificando los tipos y reglas de los datos del formulario o modelos/schemas]
+- [x] **CORS**: [ Implemente un proxi inverso del mismo frontend para que alcance al backend, por medio de nginx]
 - [ ] **Headers de seguridad**: [¿Usaste helmet? ¿Otras medidas?]
 - [ ] **Rate limiting**: [Si lo implementaste, ¿cómo?]
 
@@ -109,16 +128,16 @@ frontend/
 
 ### Framework/Librería de UI
 
-**Elegí**: [Ninguna / Material-UI / Ant Design / TailwindCSS / etc.]
+**Elegí**: [Material-UI]
 
-**Razón**: [¿Por qué elegiste esto sobre otras opciones?]
+**Razón**: [Por motivos de tiempo de desarrollo ya que cuenta con plantillas y componentes que se pueden solo usar]
 
 ### Patrones de Diseño
 
 - **Responsive Design**: [¿Cómo lo abordaste? Mobile-first?]
-- **Loading States**: [¿Cómo manejaste los estados de carga?]
-- **Error Handling**: [¿Cómo muestras errores al usuario?]
-- **Feedback Visual**: [Toasts, modales, etc.]
+- **Loading States**: [Lazy loading]
+- **Error Handling**: [Por medio de alertas]
+- **Feedback Visual**: [Modales]
 
 ### Decisiones de UX
 
@@ -131,9 +150,9 @@ frontend/
 ### Estrategia de Testing
 
 **Backend:**
-- [Tipo de tests que escribiste]
-- [¿Por qué elegiste probar estos endpoints/funciones específicamente?]
-- [Herramientas usadas]
+- [Test de integracion entre controlador, modelos, validaciones]
+- [Porque a futuro con las mejoras son los mas faciles de romperse]
+- [Jest Supertest]
 
 **Frontend:**
 - [Tipo de tests que escribiste]
@@ -158,9 +177,9 @@ frontend/
 - [x] compose.yml
 
 **Decisiones:**
-- [¿Por qué elegiste Alpine/Debian como base?]
-- [¿Usaste multi-stage builds? ¿Por qué?]
-- [¿Cómo optimizaste el tamaño de las imágenes?]
+- [Elegiste Alpine como base, para manejar un mismo tipo de SO, en todos los ambientes, consistencia de erroes en diferentes ambientes]
+- [Para reducir el tamaño de las imagenes solo exponer lo necesario de mis servicios]
+- [Construyendo la aplicacion con todas las librerias necesarias y luego sirviendola en el directorio final]
 
 ---
 
@@ -246,20 +265,25 @@ frontend/
 
 Si tuviera más tiempo, implementaría:
 
-1. **[Mejora 1]**
-   - Descripción: [...]
-   - Beneficio: [...]
-   - Tiempo estimado: [...]
+1. **[Logging]**
+   - Descripción: [Verificacion de posibles probleas o si la app esta funcionando de forma correcta]
+   - Beneficio: [Poder conectar con servicios que me permitan conocer la salud de mi app]
+   - Tiempo estimado: [2 horas]
 
-2. **[Mejora 2]**
-   - Descripción: [...]
-   - Beneficio: [...]
-   - Tiempo estimado: [...]
+2. **[Sistema de notificaciones]**
+   - Descripción: [Implementar toast]
+   - Beneficio: [Para que el usuario final, sepa que esta pasando]
+   - Tiempo estimado: [2 Horas]
 
-3. **[Mejora 3]**
-   - Descripción: [...]
-   - Beneficio: [...]
-   - Tiempo estimado: [...]
+3. **[Testing coverage]**
+   - Descripción: [ Conocer el porcentaje de covertura que cubren mis pruebas]
+   - Beneficio: [ Verificar si la mayoria de mi codigo escrito se usa]
+   - Tiempo estimado: [8 horas]
+
+4. **[Impelentar capa de servicios y repositorios en backend]**
+   - Descripción: [ Los servicios contendrán la lógica de negocio compleja (reglas de negocio, operaciones, transformación de datos), mientras los repositorios abstraerá el acceso a datos encapsulando las consultas a Sequelize. ]
+   - Beneficio: [Mejora significativa en la mantenibilidad y testabilidad del código al aplicar el principio de responsabilidad única (SRP) y facilitar la inyección de dependencias.]
+   - Tiempo estimado: [8 horas]
 
 ---
 

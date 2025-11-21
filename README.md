@@ -208,13 +208,13 @@ Docker y docker compose
 # Tus comandos
 cd backend
 npm install
-cd frontend
+cd ../frontend
 npm install
 ```
 
 ## Configuración
 ```bash
-# Variables de entorno
+# Variables de entorno backend
 cd backend
 cp .env.example .env
 #Variables docker back:
@@ -222,6 +222,7 @@ DB_HOST=mysqldb
 DB_PORT=3306
 JWT_SECRET=configurarlo
 
+# Variables de entorno frontend
 cd frontend
 cp .env.example .env
 #Variables docker front:

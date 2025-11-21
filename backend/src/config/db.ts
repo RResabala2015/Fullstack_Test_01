@@ -2,9 +2,7 @@ import { Sequelize } from "sequelize-typescript";
 import dotenv from "dotenv";
 import { registerModels } from "../models";
 
-dotenv.config({
-  path: process.env.NODE_ENV === "test" ? ".env.test.local" : ".env",
-});
+dotenv.config();
 
 const sequelize = new Sequelize({
   database: process.env.DB_NAME,
@@ -12,7 +10,7 @@ const sequelize = new Sequelize({
   password: process.env.DB_PASS,
   host: process.env.DB_HOST,
   port: Number(process.env.DB_PORT) || 3306,
-  dialect: "mysql",
+  dialect: (process.env.DB_DIALECT as any) || "mysql",
   logging: true,
 
   dialectOptions: {

@@ -22,7 +22,7 @@ export default function RoutesApp() {
           </ProtectedRoute>
         }
       >
-        <Route index path="stats" element={<UserStatsPage />} />
+        <Route path="stats" element={<UserStatsPage />} />
         <Route path="projects" element={<ProjectsPage />} />
         <Route path="tasks" element={<TasksPage />} />
       </Route>
