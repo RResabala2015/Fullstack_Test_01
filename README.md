@@ -233,7 +233,7 @@ npm run dev
 ```
 
 ## API Documentation
-- Swagger: [Tu URL]
+- Swagger: [http://localhost:3000/api/docs/]
 
 ## Credenciales de Prueba
 [Si aplica]

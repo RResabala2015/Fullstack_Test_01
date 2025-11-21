@@ -1,14 +1,17 @@
-import { Table, Column, Model, DataType, HasMany, BelongsToMany } from "sequelize-typescript";
-import Task from "../models/Task.model";
-import User from "../models/User.model";
-import ProjectUser from "../models/ProjectUser.model";
+import { 
+  Table, Column, Model, DataType, HasMany, 
+  BelongsToMany, ForeignKey, BelongsTo
+} from "sequelize-typescript";
+
+import Task from "./Task.model";
+import User from "./User.model";
+import ProjectUser from "./ProjectUser.model";
 
 @Table({
   tableName: "projects",
   timestamps: true,
 })
-
-export default class Project extends Model {
+export default class Project extends Model<Project> {
   @Column({
     type: DataType.STRING(150),
     allowNull: false,
@@ -21,9 +24,19 @@ export default class Project extends Model {
   })
   description?: string;
 
+  @ForeignKey(() => User)
+  @Column({
+    type: DataType.INTEGER,
+    allowNull: false,
+  })
+  ownerId!: number;
+
+  @BelongsTo(() => User, { as: "owner" })
+  owner!: User;
+
   @HasMany(() => Task)
   tasks!: Task[];
 
   @BelongsToMany(() => User, () => ProjectUser)
-  users!: User[];
+  collaborators!: User[];
 }

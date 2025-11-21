@@ -13,7 +13,7 @@ export const createTaskSchema = z.object({
 
 export const updateTaskSchema = z.object({
   params: z.object({
-    id: z.string().uuid("ID inválido"),
+    id: z.coerce.number(),
   }),
   body: z.object({
     title: z.string().optional(),

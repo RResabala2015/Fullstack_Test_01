@@ -1,10 +1,6 @@
 import { Sequelize } from "sequelize-typescript";
 import dotenv from "dotenv";
-
-import User from "../models/User.model";
-import Project from "../models/Project.model";
-import Task from "../models/Task.model";
-import ProjectUser from "../models/ProjectUser.model";
+import { registerModels } from "../models";
 
 dotenv.config({
   path: process.env.NODE_ENV === "test" ? ".env.test.local" : ".env",
@@ -24,7 +20,8 @@ const sequelize = new Sequelize({
     connectTimeout: 60000,
   },
 
-  models: [User, Project, Task, ProjectUser],
 });
+
+registerModels(sequelize);
 
 export default sequelize;

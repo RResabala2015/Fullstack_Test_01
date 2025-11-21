@@ -7,7 +7,7 @@ import ProjectUser from "../models/ProjectUser.model";
   timestamps: true,
 })
 
-export default class User extends Model {
+export default class User extends Model<User> {
   @Column({
     type: DataType.STRING(100),
     allowNull: false,
@@ -27,6 +27,11 @@ export default class User extends Model {
   })
   password!: string;
 
-  @BelongsToMany(() => Project, () => ProjectUser)
-  projects!: Project[];
+  // Proyectos donde es creador
+  @HasMany(() => Project, { as: "ownedProjects", foreignKey: "ownerId" })
+  ownedProjects!: Project[];
+
+  // Proyectos donde es colaborador
+  @BelongsToMany(() => Project, () => ProjectUser, "collaboratingProjects")
+  collaboratingProjects!: Project[];
 }

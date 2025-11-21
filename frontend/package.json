@@ -2,6 +2,7 @@
   "name": "frontend",
   "private": true,
   "version": "1.0.0",
+  "description": "Web para gestionar proyectos/asignaciones, tareas, reportes y estadisticas",
   "type": "module",
   "scripts": {
     "dev": "vite",

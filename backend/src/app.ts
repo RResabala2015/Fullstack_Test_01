@@ -9,7 +9,9 @@ import taskRoutes from "./routes/task.routes";
 
 import { swaggerDocs } from "./config/swagger";
 
-dotenv.config();
+dotenv.config({
+  path: process.env.NODE_ENV === "test" ? ".env.test.local" : ".env",
+});
 
 const app : Express = express();
 
@@ -25,6 +27,7 @@ app.use("/api/projects", projectRoutes);
 app.use("/api/tasks", taskRoutes);
 
 // Swagger
-swaggerDocs(app);
-
+if (process.env.NODE_ENV !== "test") {
+    swaggerDocs(app);
+}
 export default app;

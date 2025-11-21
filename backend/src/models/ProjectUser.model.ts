@@ -7,7 +7,7 @@ import Project from "../models/Project.model";
   timestamps: false,
 })
 
-export default class ProjectUser extends Model {
+export default class ProjectUser extends Model<ProjectUser> {
   @ForeignKey(() => User)
   @Column
   userId!: number;

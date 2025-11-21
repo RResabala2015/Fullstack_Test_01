@@ -10,15 +10,15 @@ export const registerController = async (req: Request, res: Response) => {
     const existing = await User.findOne({ where: { email } });
     if (existing) return res.status(400).json({ message: "El email ya está registrado" });
 
-    const hashed = await bcrypt.hash(password, 10);
+    const hashedPassword = await bcrypt.hash(password, 10);
 
     const user = await User.create({
-      name,
-      email,
-      password: hashed,
-    });
+      name: name,
+      email: email,
+      password: hashedPassword,
+    } as any);
 
-    return res.json({ message: "Usuario registrado", user });
+    return res.status(201).json({ message: "Usuario registrado", user });
   } catch (error) {
     return res.status(500).json({ error: "Error en el registro" });
   }
@@ -40,7 +40,7 @@ export const loginController = async (req: Request, res: Response) => {
       { expiresIn: "24h" }
     );
 
-    return res.json({ message: "Login exitoso", token });
+    return res.status(200).json({ message: "Login exitoso", token });
   } catch (error) {
     return res.status(500).json({ error: "Error en el login" });
   }

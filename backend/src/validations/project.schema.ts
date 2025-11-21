@@ -10,7 +10,7 @@ export const createProjectSchema = z.object({
 
 export const updateProjectSchema = z.object({
   params: z.object({
-    id: z.string().uuid("ID inválido"),
+    id: z.coerce.number(),
   }),
   body: z.object({
     name: z.string().min(3).optional(),
