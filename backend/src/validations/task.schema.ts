@@ -4,10 +4,10 @@ export const createTaskSchema = z.object({
   body: z.object({
     title: z.string().min(3),
     description: z.string().optional(),
-    status: z.enum(["pending", "in_progress", "completed"]),
+    status: z.enum(["pending", "inProgress", "completed"]),
     priority: z.enum(["low", "medium", "high"]).default("low"),
-    projectId: z.string().uuid("ID de proyecto inválido"),
-    assignedTo: z.string().uuid().optional(),
+    projectId: z.coerce.number("ID de proyecto inválido"),
+    assignedTo: z.coerce.number().optional(),
   }),
 });
 
@@ -18,8 +18,8 @@ export const updateTaskSchema = z.object({
   body: z.object({
     title: z.string().optional(),
     description: z.string().optional(),
-    status: z.enum(["pending", "in_progress", "completed"]).optional(),
+    status: z.enum(["pending", "inProgress", "completed"]).optional(),
     priority: z.enum(["low", "medium", "high"]).optional(),
-    assignedTo: z.string().uuid().optional(),
+    assignedTo: z.coerce.number().optional(),
   }),
 });

@@ -6,7 +6,7 @@ import {
   deleteUser,
 } from "../controllers/user.controller";
 import validate from "../middlewares/validate";
-import { updateUserSchema } from "../schemas/user.schema";
+import { updateUserSchema } from "../validations/user.schema";
 
 const router = Router();
 

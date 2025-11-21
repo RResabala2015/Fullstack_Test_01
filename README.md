@@ -199,7 +199,9 @@ Si tienes dudas sobre los requisitos, no dudes en contactarnos.
 > **Nota**: Completa esta sección con las instrucciones para ejecutar tu proyecto.
 
 ## Prerrequisitos
-[Tus prerrequisitos]
+Node v20.19.5 o superior
+npm 10.9.2 o superior
+Docker y docker compose
 
 ## Instalación
 ```bash
@@ -215,8 +217,16 @@ npm install
 # Variables de entorno
 cd backend
 cp .env.example .env
+#Variables docker back:
+DB_HOST=mysqldb
+DB_PORT=3306
+JWT_SECRET=configurarlo
+
 cd frontend
 cp .env.example .env
+#Variables docker front:
+VITE_API_URL="/api"
+VITE_NODE_ENV=development
 ```
 
 ## Ejecución
@@ -225,11 +235,15 @@ cp .env.example .env
 npm run dev
 # Frontend
 npm run dev
+
+# Docker
+docker compose up -d --build
 ```
 
 ## Tests
 ```bash
-# Comandos de tests
+# Backend
+npm run test
 ```
 
 ## API Documentation

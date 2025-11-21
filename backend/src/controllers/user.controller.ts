@@ -3,15 +3,15 @@ import User from "../models/User.model";
 
 export const getUsers = async (req: Request, res: Response) => {
   const users = await User.findAll({
-    attributes: ["id", "name", "email", "createdAt"],
+    attributes: ["id", "name", "email"],
   });
-  return res.json(users);
+  return res.status(200).json(users);
 };
 
 export const getUserById = async (req: Request, res: Response) => {
   const user = await User.findByPk(req.params.id);
   if (!user) return res.status(404).json({ message: "Usuario no encontrado" });
-  return res.json(user);
+  return res.status(200).json(user);
 };
 
 export const updateUser = async (req: Request, res: Response) => {
@@ -20,7 +20,7 @@ export const updateUser = async (req: Request, res: Response) => {
 
   await user.update(req.body);
 
-  res.json({ message: "Usuario actualizado", user });
+  res.status(200).json({ message: "Usuario actualizado", user });
 };
 
 export const deleteUser = async (req: Request, res: Response) => {
@@ -29,5 +29,5 @@ export const deleteUser = async (req: Request, res: Response) => {
 
   await user.destroy();
 
-  res.json({ message: "Usuario eliminado" });
+  return res.status(204).json({ message: "Usuario eliminado" });
 };

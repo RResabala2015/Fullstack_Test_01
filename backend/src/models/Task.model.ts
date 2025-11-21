@@ -6,7 +6,6 @@ import User from "../models/User.model";
   tableName: "tasks",
   timestamps: true,
 })
-
 export default class Task extends Model {
   @Column({
     type: DataType.STRING(200),
@@ -21,10 +20,16 @@ export default class Task extends Model {
   description?: string;
 
   @Column({
-    type: DataType.ENUM("todo", "in_progress", "done"),
-    defaultValue: "todo",
+    type: DataType.ENUM("pending", "inProgress", "completed"),
+    defaultValue: "pending",
   })
-  status!: string;
+  status!: "pending" | "inProgress" | "completed";
+
+  @Column({
+    type: DataType.ENUM("low", "mid", "high"),
+    defaultValue: "mid",
+  })
+  priority!: "low" | "mid" | "high";
 
   @ForeignKey(() => Project)
   @Column

@@ -153,9 +153,9 @@ frontend/
 
 ### Implementación
 
-- [ ] Dockerfile backend
-- [ ] Dockerfile frontend
-- [ ] docker-compose.yml
+- [x] Dockerfile backend
+- [x] Dockerfile frontend
+- [x] compose.yml
 
 **Decisiones:**
 - [¿Por qué elegiste Alpine/Debian como base?]

@@ -6,6 +6,10 @@ import TrendingUpIcon from "@mui/icons-material/TrendingUp";
 import AssignmentIcon from "@mui/icons-material/Assignment";
 import FolderIcon from "@mui/icons-material/Folder";
 
+import {
+  getUserStats
+} from "../api/statsService";
+
 interface UserStats {
   totalProjects: number;
   totalTasks: number;
@@ -54,40 +58,26 @@ export default function UserStatsPage() {
   const [timeRange, setTimeRange] = useState("30d");
 
   useEffect(() => {
-    // Simular carga de datos - Aquí deberías llamar a tu API
-    // fetch('/api/stats')
-    setStats({
-      totalProjects: 5,
-      totalTasks: 48,
-      completedTasks: 32,
-      tasksByStatus: {
-        pending: 8,
-        inProgress: 8,
-        completed: 32,
-      },
-      tasksByPriority: {
-        low: 15,
-        mid: 20,
-        high: 13,
-      },
-      tasksOverTime: [
-        { date: "Jan", pending: 5, inProgress: 3, completed: 10 },
-        { date: "Feb", pending: 7, inProgress: 4, completed: 15 },
-        { date: "Mar", pending: 6, inProgress: 5, completed: 18 },
-        { date: "Apr", pending: 8, inProgress: 6, completed: 22 },
-        { date: "May", pending: 8, inProgress: 8, completed: 32 },
-      ],
-      activityByDay: [
-        { day: "Mon", tasks: 8 },
-        { day: "Tue", tasks: 12 },
-        { day: "Wed", tasks: 6 },
-        { day: "Thu", tasks: 10 },
-        { day: "Fri", tasks: 7 },
-        { day: "Sat", tasks: 3 },
-        { day: "Sun", tasks: 2 },
-      ],
-    });
-  }, [timeRange]);
+  loadStats();
+}, [timeRange]);
+
+  const loadStats = async () => {
+    try {
+      const data = await getUserStats(timeRange);
+
+      setStats({
+        totalProjects: data.totalProjects,
+        totalTasks: data.totalTasks,
+        completedTasks: data.completedTasks,
+        tasksByStatus: data.tasksByStatus,
+        tasksByPriority: data.tasksByPriority,
+        tasksOverTime: data.tasksOverTime,
+        activityByDay: data.activityByDay,
+      });
+    } catch (error) {
+      console.error("Error cargando estadísticas:", error);
+    }
+  };
 
   const statusData = [
     {
@@ -257,7 +247,11 @@ export default function UserStatsPage() {
         <Grid size={{ xs: 12, sm: 6, md: 4 }}>
           <StatCard
             title="Completion Rate"
-            value={Math.round((stats.completedTasks / stats.totalTasks) * 100)}
+            value={
+              stats.totalTasks > 0
+                ? Math.round((stats.completedTasks / stats.totalTasks) * 100)
+                : 0
+            }
             subtitle={`${stats.completedTasks}/${stats.totalTasks} tasks`}
             icon={<TrendingUpIcon />}
             trend={{

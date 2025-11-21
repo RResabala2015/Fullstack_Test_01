@@ -1,8 +1,10 @@
 import sequelizeTest from "./test-db";
 import request from "supertest";
 import app from "../src/app";
+import jwt from "jsonwebtoken";
 
 export let TEST_TOKEN: string;
+export let userId: number;
 
 beforeAll(async () => {
   await sequelizeTest.sync({ force: true });
@@ -31,6 +33,13 @@ beforeAll(async () => {
   }
 
   TEST_TOKEN = loginRes.body.token;
+
+  const decoded = jwt.verify(TEST_TOKEN, process.env.JWT_SECRET as string) as { id: number };
+  userId = decoded.id;
+
+  if (!userId || typeof userId !== "number") {
+    throw new Error("No se pudo obtener el id del usuario de test");
+  }
 });
 
 afterAll(async () => {
