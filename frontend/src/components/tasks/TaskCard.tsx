@@ -1,6 +1,6 @@
 import { Paper, Typography, Chip, Box } from "@mui/material";
 import { useDraggable } from "@dnd-kit/core";
-import type { Task } from "../../pages/TasksPage";
+import type { Task } from "../../@types/Task";
 
 interface Props {
   task: Task;

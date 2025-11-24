@@ -8,6 +8,7 @@ import {
   deleteProject,
   addCollaborator,
   getCollaborators,
+  removeCollaborator
 } from "../controllers/project.controller";
 
 import validate from "../middlewares/validate";
@@ -327,5 +328,51 @@ router.post("/add-collaborator", auth, addCollaborator);
  *         description: Error interno del servidor
  */
 router.get("/:projectId/collaborators", auth, getCollaborators);
+
+
+/**
+ * @swagger
+ * /projects/{projectId}/collaborators/{userId}:
+ *   delete:
+ *     summary: Eliminar un colaborador de un proyecto
+ *     tags: [Projects]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: projectId
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: ID del proyecto
+ *       - in: path
+ *         name: userId
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: ID del usuario colaborador a eliminar
+ *     responses:
+ *       200:
+ *         description: Colaborador eliminado correctamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Colaborador eliminado
+ *       400:
+ *         description: El usuario no es colaborador
+ *       404:
+ *         description: Proyecto o usuario no encontrado
+ *       500:
+ *         description: Error interno del servidor
+ */
+router.delete(
+  "/:projectId/collaborators/:userId",
+  auth,
+  removeCollaborator
+);
 
 export default router;

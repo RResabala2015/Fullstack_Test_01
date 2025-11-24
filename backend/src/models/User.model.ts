@@ -1,12 +1,22 @@
-import { Table, Column, Model, DataType, HasMany, BelongsToMany } from "sequelize-typescript";
-import Project from "../models/Project.model";
-import ProjectUser from "../models/ProjectUser.model";
+import {
+  Table,
+  Column,
+  Model,
+  DataType,
+  HasMany,
+} from "sequelize-typescript";
+
+import Project from "./Project.model";
 
 @Table({
   tableName: "users",
   timestamps: true,
+  indexes: [
+    { unique: true, fields: ["email"] },
+    { fields: ["name"] },
+    { fields: ["createdAt"] },
+  ],
 })
-
 export default class User extends Model<User> {
   @Column({
     type: DataType.STRING(100),
@@ -27,11 +37,6 @@ export default class User extends Model<User> {
   })
   password!: string;
 
-  // Proyectos donde es creador
   @HasMany(() => Project, { as: "ownedProjects", foreignKey: "ownerId" })
   ownedProjects!: Project[];
-
-  // Proyectos donde es colaborador
-  @BelongsToMany(() => Project, () => ProjectUser, "collaboratingProjects")
-  collaboratingProjects!: Project[];
 }

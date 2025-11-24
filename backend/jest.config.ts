@@ -10,5 +10,14 @@ export default {
   testMatch: ["**/tests/**/*.test.ts"],
   setupFilesAfterEnv: ["<rootDir>/tests/setupTestDB.ts"],
   forceExit: true,
-  clearMocks: true
+  clearMocks: true,
+  collectCoverage: true,
+  coverageDirectory: "coverage",
+  collectCoverageFrom: [
+    "src/**/*.ts",
+    "!src/**/*.d.ts",
+    "!src/**/index.ts"
+  ],
+
+  coverageReporters: ["text", "lcov", "html"],
 };

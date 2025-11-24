@@ -1,6 +1,12 @@
 import { 
-  Table, Column, Model, DataType, HasMany, 
-  BelongsToMany, ForeignKey, BelongsTo
+  Table,
+  Column,
+  Model,
+  DataType,
+  HasMany,
+  BelongsToMany,
+  ForeignKey,
+  BelongsTo,
 } from "sequelize-typescript";
 
 import Task from "./Task.model";
@@ -10,6 +16,11 @@ import ProjectUser from "./ProjectUser.model";
 @Table({
   tableName: "projects",
   timestamps: true,
+  indexes: [
+    { fields: ["ownerId"] },
+    { fields: ["name"] },
+    { fields: ["ownerId", "name"] },
+  ],
 })
 export default class Project extends Model<Project> {
   @Column({

@@ -8,7 +8,7 @@ interface DefaultRouteProps {
 
 export default function DefaultRoute({ children }: DefaultRouteProps) {
   const isAuthenticated = useSelector(
-    (state: RootState) => state.user.isAuthenticated
+    (state: RootState) => state.auth.isAuthenticated
   );
 
   if (isAuthenticated) {

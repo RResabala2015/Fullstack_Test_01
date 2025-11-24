@@ -152,7 +152,7 @@ export const addCollaborator = async (req: AuthRequest, res: Response) => {
       userId: userId
     } as any);
 
-    res.status(200).json({ message: "Colaborador agregado" });
+    res.status(201).json({ message: "Colaborador agregado" });
 
   } catch (error) {
     res.status(500).json({ message: "Error al agregar colaborador", error });
@@ -187,5 +187,38 @@ export const getCollaborators = async (req: AuthRequest, res: Response) => {
       message: "Error obteniendo colaboradores",
       error,
     });
+  }
+};
+
+export const removeCollaborator = async (req: AuthRequest, res: Response) => {
+  try {
+    const { projectId, userId } = req.params;
+
+    const project = await Project.findByPk(projectId);
+    if (!project) {
+      return res.status(404).json({ message: "Proyecto no encontrado" });
+    }
+
+    const user = await User.findByPk(userId);
+    if (!user) {
+      return res.status(404).json({ message: "Usuario no encontrado" });
+    }
+
+    const relation = await ProjectUser.findOne({
+      where: { projectId, userId },
+    });
+
+    if (!relation) {
+      return res
+        .status(400)
+        .json({ message: "El usuario no es colaborador del proyecto" });
+    }
+
+    await relation.destroy();
+
+    return res.json({ message: "Colaborador eliminado" });
+  } catch (error) {
+    console.error("Error removiendo colaborador:", error);
+    return res.status(500).json({ message: "Error interno del servidor" });
   }
 };

@@ -199,9 +199,11 @@ Si tienes dudas sobre los requisitos, no dudes en contactarnos.
 > **Nota**: Completa esta sección con las instrucciones para ejecutar tu proyecto.
 
 ## Prerrequisitos
-Node v20.19.5 o superior
-npm 10.9.2 o superior
-Docker y docker compose
+Asegúrate de tener instalado:
+- Node.js v20.19.5 o superior
+- npm v10.9.2 o superior
+- Docker & Docker Compose (opcional, pero recomendado)
+- MySQL 8 (si no usas Docker)
 
 ## Instalación
 ```bash
@@ -217,38 +219,53 @@ npm install
 # Variables de entorno backend
 cd backend
 cp .env.example .env
-#Variables docker back:
-DB_HOST=mysqldb
-DB_PORT=3306
-JWT_SECRET=configurarlo
+# Editar las variables:
+# DB_HOST=mysqldb
+# DB_PORT=3306
+# JWT_SECRET=configurarlo
+# Si NO usas Docker, reemplaza DB_HOST=mysqldb por DB_HOST=localhost
 
 # Variables de entorno frontend
-cd frontend
+cd ../frontend
 cp .env.example .env
-#Variables docker front:
-VITE_API_URL="/api"
-VITE_NODE_ENV=development
+# Editar las variables:
+# VITE_API_URL="/api"
+#VITE_NODE_ENV=development
 ```
 
 ## Ejecución
 ```bash
 # Backend
+cd backend
 npm run dev
 # Frontend
+cd ../frontend
 npm run dev
+```
 
-# Docker
+```bash
+# Con Docker para subir y construir las imagenes:
 docker compose up -d --build
+# Para bajar y eliminar todo:
+docker compose down --rmi all
 ```
 
 ## Tests
 ```bash
 # Backend
+cd backend
 npm run test
+# Para generar la cobertura:
+npm run test:coverage
+
+# Frontend
+cd ../frontend
+npm run dev
 ```
 
 ## API Documentation
 - Swagger: [http://localhost:3000/api/docs/]
 
 ## Credenciales de Prueba
-[Si aplica]
+- email: test@example.com
+- password: 123456

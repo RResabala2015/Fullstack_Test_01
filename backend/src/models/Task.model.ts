@@ -1,10 +1,24 @@
-import { Table, Column, Model, DataType, BelongsTo, ForeignKey } from "sequelize-typescript";
-import Project from "../models/Project.model";
-import User from "../models/User.model";
+import {
+  Table,
+  Column,
+  Model,
+  DataType,
+  BelongsTo,
+  ForeignKey,
+} from "sequelize-typescript";
+import Project from "./Project.model";
+import User from "./User.model";
 
 @Table({
   tableName: "tasks",
   timestamps: true,
+  indexes: [
+    { fields: ["projectId"] },
+    { fields: ["assignedTo"] },
+    { fields: ["status"] },
+    { fields: ["priority"] },
+    { fields: ["projectId", "status"] },
+  ],
 })
 export default class Task extends Model {
   @Column({

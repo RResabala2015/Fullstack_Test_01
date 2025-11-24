@@ -8,12 +8,12 @@ dotenv.config({
 
 const PORT = process.env.PORT || 3000;
 
-sequelize
-  .sync({ alter: true }) // o .sync({ force: false })
-  .then(() => console.log("Database synchronized"))
-  .catch(err => console.error("Error initializing DB:", err));
-
 if (process.env.NODE_ENV !== "test") {
+  sequelize
+    .sync({ alter: true }) // o .sync({ force: false })
+    .then(() => console.log("Database synchronized"))
+    .catch(err => console.error("Error initializing DB:", err));
+
   app.listen(PORT, () => {
     console.log(`Servidor corriendo en http://localhost:${PORT}`);
   });

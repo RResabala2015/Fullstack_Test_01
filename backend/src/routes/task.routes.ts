@@ -2,6 +2,7 @@ import { Router } from "express";
 import {
   createTask,
   getTasks,
+  getTasksByFilters,
   getTaskById,
   updateTask,
   deleteTask,
@@ -97,6 +98,8 @@ const router = Router();
  */
 router.post("/", auth, validate(createTaskSchema), createTask);
 router.get("/", auth, getTasks);
+
+router.get('/filtered', auth, getTasksByFilters);
 /**
  * @swagger
  * /tasks/{id}:

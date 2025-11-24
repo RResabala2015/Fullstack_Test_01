@@ -3,7 +3,7 @@ import { Op, Sequelize } from "sequelize";
 import Project from "../models/Project.model";
 import Task from "../models/Task.model";
 
-interface StatsRangeMap {
+interface RangeMap {
   [key: string]: number;
 }
 
@@ -12,7 +12,7 @@ export const getGeneralStats = async (req: Request, res: Response) => {
     const userId = (req as any).user.id;
     const range = (req.query.range as string) || "30d";
 
-    const daysMap: StatsRangeMap = {
+    const rangeMap: RangeMap = {
       "7d": 7,
       "15d": 15,
       "30d": 30,
@@ -20,35 +20,36 @@ export const getGeneralStats = async (req: Request, res: Response) => {
       "1y": 365,
     };
 
-    const days = daysMap[range] || 30;
+    const days = rangeMap[range] || 30;
     const fromDate = new Date();
     fromDate.setDate(fromDate.getDate() - days);
 
     // ---------------------------------------------------------
-    // 1. Total proyectos del usuario
+    // 1. Total Projects
     // ---------------------------------------------------------
     const totalProjects = await Project.count({
       where: { ownerId: userId },
     });
 
     // ---------------------------------------------------------
-    // 2. Total de tareas asignadas
+    // 2. Total Tasks
     // ---------------------------------------------------------
     const totalTasks = await Task.count({
       where: { assignedTo: userId },
     });
 
     // ---------------------------------------------------------
-    // 3. Tareas completadas
+    // 3. Completed Tasks
     // ---------------------------------------------------------
     const completedTasks = await Task.count({
-      where: { assignedTo: userId, status: "done" },
+      where: { assignedTo: userId, status: "completed" },
     });
 
     // ---------------------------------------------------------
-    // 4. Tareas por estado
+    // 4. Tasks by Status
     // ---------------------------------------------------------
     const tasksByStatusRaw = await Task.findAll({
+      raw: true,
       attributes: [
         "status",
         [Sequelize.fn("COUNT", Sequelize.col("status")), "count"],
@@ -57,20 +58,18 @@ export const getGeneralStats = async (req: Request, res: Response) => {
       group: ["status"],
     });
 
-    const tasksByStatus = {
-      todo: 0,
-      in_progress: 0,
-      done: 0,
-    };
+    const tasksByStatus = { pending: 0, inProgress: 0, completed: 0 };
 
     tasksByStatusRaw.forEach((row: any) => {
-      tasksByStatus[row.status as keyof typeof tasksByStatus] = Number(row.dataValues.count);
+      const status = row.status as keyof typeof tasksByStatus;
+      tasksByStatus[status] = Number(row.count);
     });
 
     // ---------------------------------------------------------
-    // 5. Tareas por prioridad
+    // 5. Tasks by Priority
     // ---------------------------------------------------------
     const tasksByPriorityRaw = await Task.findAll({
+      raw: true,
       attributes: [
         "priority",
         [Sequelize.fn("COUNT", Sequelize.col("priority")), "count"],
@@ -79,20 +78,18 @@ export const getGeneralStats = async (req: Request, res: Response) => {
       group: ["priority"],
     });
 
-    const tasksByPriority = {
-      low: 0,
-      mid: 0,
-      high: 0,
-    };
+    const tasksByPriority = { low: 0, mid: 0, high: 0 };
 
     tasksByPriorityRaw.forEach((row: any) => {
-      tasksByPriority[row.priority as keyof typeof tasksByPriority] = Number(row.dataValues.count);
+      const priority = row.priority as keyof typeof tasksByPriority;
+      tasksByPriority[priority] = Number(row.count);
     });
 
     // ---------------------------------------------------------
-    // 6. Actividad por día
+    // 6. Activity by Day
     // ---------------------------------------------------------
-    const activityByDayRaw = await Task.findAll({
+    const activityByDay = await Task.findAll({
+      raw: true,
       attributes: [
         [
           Sequelize.fn("DATE_FORMAT", Sequelize.col("createdAt"), "%Y-%m-%d"),
@@ -108,20 +105,14 @@ export const getGeneralStats = async (req: Request, res: Response) => {
       order: [[Sequelize.literal("day"), "ASC"]],
     });
 
-    const activityByDay = activityByDayRaw.map((row: any) => ({
-      day: row.dataValues.day,
-      tasks: Number(row.dataValues.tasks),
-    }));
-
     // ---------------------------------------------------------
-    // 7. Tareas agrupadas por mes (para gráficos)
+    // 7. Tasks Over Time (Year-Month Aggregation)
     // ---------------------------------------------------------
     const tasksOverTimeRaw = await Task.findAll({
+      raw: true,
       attributes: [
         [Sequelize.fn("YEAR", Sequelize.col("createdAt")), "year"],
         [Sequelize.fn("MONTH", Sequelize.col("createdAt")), "month"],
-
-        // Conteos por estado
         [
           Sequelize.literal(
             `SUM(CASE WHEN status = 'pending' THEN 1 ELSE 0 END)`
@@ -145,33 +136,26 @@ export const getGeneralStats = async (req: Request, res: Response) => {
         assignedTo: userId,
         createdAt: { [Op.gte]: fromDate },
       },
-      group: [
-        Sequelize.fn("YEAR", Sequelize.col("createdAt")),
-        Sequelize.fn("MONTH", Sequelize.col("createdAt")),
-      ],
+      group: ["year", "month"],
       order: [
-        [Sequelize.fn("YEAR", Sequelize.col("createdAt")), "ASC"],
-        [Sequelize.fn("MONTH", Sequelize.col("createdAt")), "ASC"],
+        ["year", "ASC"],
+        ["month", "ASC"],
       ],
-      raw: true,
     });
 
     const tasksOverTime = tasksOverTimeRaw.map((row: any) => {
-      const rawDate = row.dataValues.date; // '2025-11'
-      const monthName = new Date(rawDate + "-01").toLocaleString("en-US", {
-        month: "short",
-      });
+      const date = `${row.year}-${String(row.month).padStart(2, "0")}-01`;
 
       return {
-        date: monthName,
-        todo: Number(row.dataValues.todo),
-        inProgress: Number(row.dataValues.in_progress),
-        completed: Number(row.dataValues.done),
+        date: new Date(date).toLocaleString("en-US", { month: "short" }),
+        pending: Number(row.pending),
+        inProgress: Number(row.inProgress),
+        completed: Number(row.completed),
       };
     });
 
     // ---------------------------------------------------------
-    // Respuesta final
+    // Response
     // ---------------------------------------------------------
     return res.json({
       totalProjects,

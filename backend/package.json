@@ -10,8 +10,10 @@
     "build": "tsc",
     "start": "node dist/server.js",
     "test": "cross-env NODE_ENV=test jest --runInBand --detectOpenHandles --forceExit",
+    "test:coverage": "cross-env NODE_ENV=test jest --coverage",
     "test:watch": "cross-env NODE_ENV=test jest --watch",
-    "test:clear": "jest --clearCache"
+    "test:clear": "jest --clearCache",
+    "seed": "ts-node src/seed/index.ts"
   },
   "keywords": [],
   "author": "RResabala2015",

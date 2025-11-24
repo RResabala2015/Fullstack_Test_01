@@ -7,6 +7,7 @@ import userRoutes from "./routes/user.routes";
 import projectRoutes from "./routes/project.routes";
 import taskRoutes from "./routes/task.routes";
 import statsRoutes from "./routes/stats.routes";
+import healthRoutes from "./routes/health.route";
 
 import { swaggerDocs } from "./config/swagger";
 
@@ -29,6 +30,7 @@ app.use("/api/users", userRoutes);
 app.use("/api/projects", projectRoutes);
 app.use("/api/tasks", taskRoutes);
 app.use("/api/stats", statsRoutes);
+app.use("/api/health", healthRoutes);
 
 // Swagger
 if (process.env.NODE_ENV !== "test") {

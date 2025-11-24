@@ -2,7 +2,9 @@ import { Sequelize } from "sequelize-typescript";
 import dotenv from "dotenv";
 import { registerModels } from "../models";
 
-dotenv.config();
+dotenv.config({
+  path: process.env.NODE_ENV === "test" ? ".env.test.local" : ".env",
+});
 
 const sequelize = new Sequelize({
   database: process.env.DB_NAME,

@@ -22,30 +22,23 @@ import GroupIcon from "@mui/icons-material/GroupAdd";
 
 import ProjectModal from "../components/projects/ProjectModal";
 import CollaboratorsModal from "../components/projects/CollaboratorsModal";
-
+import { useAppDispatch, useAppSelector } from '../store/hooks';
 import {
-  getProjects,
+  fetchProjects,
   createProject,
   updateProject,
   deleteProject,
-} from "../api/projectService";
+} from '../store/slices/projectsSlice';
 
-interface Project {
-  id: number;
-  name: string;
-  description?: string;
-  createdAt: string;
-}
+import type { Project } from '../api/projectService';
 
 export default function ProjectsPage() {
-  const [projects, setProjects] = useState<Project[]>([]);
+  const dispatch = useAppDispatch();
   const [openModal, setOpenModal] = useState(false);
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
-  const [loading, setLoading] = useState(true);
-
+  const { total, projects, loading } = useAppSelector((state) => state.projects);
   const [page, setPage] = useState(0);
   const [limit, setLimit] = useState(10);
-  const [total, setTotal] = useState(0);
 
   const [search, setSearch] = useState("");
   const [openCollaborators, setOpenCollaborators] = useState(false);
@@ -56,21 +49,9 @@ export default function ProjectsPage() {
     setOpenCollaborators(true);
   };
 
-  const loadProjects = async () => {
-    setLoading(true);
-    try {
-      const data = await getProjects(page + 1, limit);
-      setProjects(data.data);
-      setTotal(data.total);
-    } catch (error) {
-      console.error("Error cargando proyectos:", error);
-    }
-    setLoading(false);
-  };
-
   useEffect(() => {
-    loadProjects();
-  }, [page, limit]);
+    dispatch(fetchProjects({ page: page + 1, limit }));
+  }, [dispatch, page, limit]);
 
   const handleOpenNew = () => {
     setSelectedProject(null);
@@ -82,23 +63,17 @@ export default function ProjectsPage() {
     setOpenModal(true);
   };
 
-  const handleDelete = async (id: number) => {
-    if (!confirm("¿Deseas eliminar este proyecto?")) return;
+  const handleDeleteProject = async (project: Project) => {
+    if (!window.confirm(`¿Eliminar el proyecto "${project.name}"?`)) return;
 
     try {
-      await deleteProject(id);
-
-      if (projects.length === 1 && page > 0) {
-        setPage(page - 1);
-      } else {
-        loadProjects();
-      }
+      await dispatch(deleteProject(project.id)).unwrap();
     } catch (error) {
-      console.error("Error eliminando proyecto:", error);
+      console.error('Error al eliminar proyecto:', error);
     }
   };
 
-  const handleSave = async (data: any) => {
+  /* const handleSave = async (data: any) => {
     try {
       if (selectedProject) {
         await updateProject(selectedProject.id, data);
@@ -111,6 +86,25 @@ export default function ProjectsPage() {
     } catch (error) {
       console.error("Error guardando proyecto:", error);
     }
+  }; */
+
+  const handleSaveProject = async (data: any) => {
+    try {
+      if (selectedProject) {
+        await dispatch(
+          updateProject({
+            id: selectedProject.id,
+            data: data,
+          })
+        ).unwrap();
+      } else {
+        // Crear
+        await dispatch(createProject(data)).unwrap();
+      }
+      setOpenModal(false);
+    } catch (error) {
+      console.error('Error al guardar proyecto:', error);
+    }
   };
 
   const filteredProjects = projects.filter((p) => {
@@ -120,6 +114,7 @@ export default function ProjectsPage() {
       (p.description || "").toLowerCase().includes(text)
     );
   });
+
 
   return (
     <Box>
@@ -179,7 +174,7 @@ export default function ProjectsPage() {
 
                       <IconButton
                         color="error"
-                        onClick={() => handleDelete(project.id)}
+                        onClick={() => handleDeleteProject(project)}
                       >
                         <DeleteIcon />
                       </IconButton>
@@ -216,7 +211,7 @@ export default function ProjectsPage() {
       <ProjectModal
         open={openModal}
         onClose={() => setOpenModal(false)}
-        onSave={handleSave}
+        onSave={handleSaveProject}
         project={selectedProject}
       />
       <CollaboratorsModal
